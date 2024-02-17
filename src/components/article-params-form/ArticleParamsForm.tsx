@@ -38,7 +38,9 @@ export const ArticleParamsForm = ({children, onSubmit, onReset}: TForm) => {
 			<aside className={styles.container} ref={formRef}>
 				<form className={styles.form}>
 					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
-						<p style={{color: '#000'}}>задайте параметры</p>
+						<p style={{color: '#000'}}>
+							задайте параметры
+						</p>
 					</Text>
 
 					{children}

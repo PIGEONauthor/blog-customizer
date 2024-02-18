@@ -1,44 +1,33 @@
-import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
-// import {
-// 	fontFamilyOptions,
-// 	fontColors,
-// 	backgroundColors,
-// 	contentWidthArr,
-// 	fontSizeOptions,
-// } from 'src/constants/articleProps';
 import { Text } from 'components/text';
-import { useEffect, useRef, useState, ReactNode } from 'react';
-// import { Select } from '../select';
+import { useEffect, useRef, ReactNode } from 'react';
 import styles from './ArticleParamsForm.module.scss';
-// import { RadioGroup } from '../radio-group';
-// import { OnClick } from '../arrow-button/ArrowButton';
 
 type TForm = {
+	open: boolean;
+	openButton?: ReactNode,
 	children: ReactNode,
-	onSubmit: (evt: React.MouseEvent) => void,
-	onReset: () => void
+	onSubmit?: (evt: React.MouseEvent) => void,
+	onReset?: () => void
 }
 
-export const ArticleParamsForm = ({children, onSubmit, onReset}: TForm) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const formRef = useRef<HTMLElement | null>(null);
-
-	const handleChangeState = () => {
-		setIsOpen(!isOpen);
-	};
+export const ArticleParamsForm = ({open, openButton, children, onSubmit, onReset}: TForm) => {
+	
+	const sideBarRef = useRef<HTMLElement | null>(null);
+	const formRef = useRef<HTMLFormElement | null>(null);
 
 	useEffect(() => {
-		formRef.current && formRef.current.classList.toggle(styles.container_open);
-	}, [isOpen]);
+		sideBarRef.current && sideBarRef.current.classList.toggle(styles.container_open);
+	}, [open]);
 
 	return (
 		<>
-			<ArrowButton open={isOpen} handleOpen={handleChangeState} />
-			<aside className={styles.container} ref={formRef}>
-				<form className={styles.form}>
+			{openButton}
+			{/* <ArrowButton open={isOpen} handleOpen={handleChangeState} /> */}
+			<aside className={styles.container} ref={sideBarRef}>
+				<form className={styles.form} ref={formRef}>
 					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
-						<p style={{color: '#000'}}>
+						<p style={{color: '#000', fontFamily: 'Open Sans'}}>
 							задайте параметры
 						</p>
 					</Text>

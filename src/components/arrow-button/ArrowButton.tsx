@@ -4,7 +4,7 @@ import styles from './ArrowButton.module.scss';
 import { useEffect, useRef } from 'react';
 
 /** Функция для обработки открытия/закрытия формы */
-export type OnClick = () => void;
+export type OnClick = (evt?: React.MouseEvent) => void;
 
 export type TArrowProps = {
 	open: boolean,
@@ -18,9 +18,10 @@ export const ArrowButton = (arrowProps: TArrowProps) => {
 	const arrowRef = useRef<HTMLImageElement | null>(null);
 
 	useEffect(() => {
-		buttonRef.current &&
-			buttonRef.current.classList.toggle(styles.container_open);
-		arrowRef.current && arrowRef.current.classList.toggle(styles.arrow_open);
+		buttonRef.current
+		&&	buttonRef.current.classList.toggle(styles.container_open);
+		arrowRef.current
+		&& arrowRef.current.classList.toggle(styles.arrow_open);
 	}, [open]);
 
 	return (

@@ -16,6 +16,7 @@ import {
 } from 'src/constants/articleProps';
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
+import { ArrowButton } from 'components/arrow-button';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
@@ -23,6 +24,7 @@ const root = createRoot(domNode);
 const App = () => {
 	const [pageState, setPageState] = useState(defaultArticleState);
 	const [formState, setFormState] = useState(defaultArticleState);
+	const [formIsOpen, setFormIsOpen] = useState(false);
 
 	const handleSubmit = (evt: React.MouseEvent) => {
 		evt.preventDefault();
@@ -41,6 +43,14 @@ const App = () => {
 		setPageState(defaultArticleState);
 	}
 
+	const handleCloseByOver = () => {
+		formIsOpen && setFormIsOpen(!formIsOpen);
+	}
+
+	const handleOpenForm = () => {
+		setFormIsOpen(!formIsOpen)
+	}
+
 	return (
 		<div
 			className={clsx(styles.main)}
@@ -53,8 +63,13 @@ const App = () => {
 					'--bg-color': pageState.backgroundColors.value,
 				} as CSSProperties
 			}>
-			{/* <ArticleParamsForm /> */}
-			<ArticleParamsForm onSubmit={handleSubmit} onReset={handleReset}>
+			<ArticleParamsForm
+				open={formIsOpen}
+				onSubmit={handleSubmit}
+				onReset={handleReset}
+				openButton={
+					<ArrowButton open={formIsOpen} handleOpen={handleOpenForm} />
+				}>
 				<Select
 					options={fontFamilyOptions}
 					selected={formState.fontFamilyOptions}
@@ -102,7 +117,7 @@ const App = () => {
 					})}
 				/>
 			</ArticleParamsForm>
-			<Article />
+			<Article handler={handleCloseByOver} />
 		</div>
 	);
 };

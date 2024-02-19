@@ -4,19 +4,18 @@ import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
-import { defaultArticleState } from './constants/articleProps';
-import { Select } from './components/select';
-import { RadioGroup } from './components/radio-group';
 import {
+	defaultArticleState,
 	fontFamilyOptions,
 	fontColors,
 	backgroundColors,
 	contentWidthArr,
 	fontSizeOptions,
-} from 'src/constants/articleProps';
+} from './constants/articleProps';
+import { Select } from './components/select';
+import { RadioGroup } from './components/radio-group';
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
-import { ArrowButton } from 'components/arrow-button';
 
 const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
@@ -24,9 +23,8 @@ const root = createRoot(domNode);
 const App = () => {
 	const [pageState, setPageState] = useState(defaultArticleState);
 	const [formState, setFormState] = useState(defaultArticleState);
-	const [formIsOpen, setFormIsOpen] = useState(false);
 
-	const handleSubmit = (evt: React.MouseEvent) => {
+	const handleSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
 		evt.preventDefault();
 		setPageState({
 			...pageState,
@@ -41,15 +39,7 @@ const App = () => {
 	const handleReset = () => {
 		setFormState(defaultArticleState);
 		setPageState(defaultArticleState);
-	}
-
-	const handleCloseByOver = () => {
-		formIsOpen && setFormIsOpen(!formIsOpen);
-	}
-
-	const handleOpenForm = () => {
-		setFormIsOpen(!formIsOpen)
-	}
+	};
 
 	return (
 		<div
@@ -64,60 +54,70 @@ const App = () => {
 				} as CSSProperties
 			}>
 			<ArticleParamsForm
-				open={formIsOpen}
+				header={'задайте параметры'}
 				onSubmit={handleSubmit}
-				onReset={handleReset}
-				openButton={
-					<ArrowButton open={formIsOpen} handleOpen={handleOpenForm} />
-				}>
+				onReset={handleReset}>
 				<Select
 					options={fontFamilyOptions}
 					selected={formState.fontFamilyOptions}
 					title={'шрифт'}
-					onChange={(option) => setFormState({
-						...formState,
-						fontFamilyOptions: option
-					})}
+					onChange={(option) =>
+						setFormState({
+							...formState,
+							fontFamilyOptions: option,
+						})
+					}
 				/>
 				<RadioGroup
 					options={fontSizeOptions}
 					name={'размер шрифта'}
 					selected={formState.fontSizeOptions}
 					title={'размер шрифта'}
-					onChange={(option) => setFormState({
-						...formState,
-						fontSizeOptions: option
-					})}
+					onChange={(option) =>
+						setFormState({
+							...formState,
+							fontSizeOptions: option,
+						})
+					}
 				/>
 				<Select
 					options={fontColors}
 					selected={formState.fontColors}
 					title={'цвет шрифта'}
-					onChange={(option) => setFormState({
-						...formState,
-						fontColors: option
-					})}
+					onChange={(option) =>
+						setFormState({
+							...formState,
+							fontColors: option,
+						})
+					}
 				/>
+				<div style={{ height: '1px', color: '#D7D7D7', opacity: '0.5' }}>
+					<hr></hr>
+				</div>
 				<Select
 					options={backgroundColors}
 					selected={formState.backgroundColors}
 					title={'цвет фона'}
-					onChange={(option) => setFormState({
-						...formState,
-						backgroundColors: option
-					})}
+					onChange={(option) =>
+						setFormState({
+							...formState,
+							backgroundColors: option,
+						})
+					}
 				/>
 				<Select
 					options={contentWidthArr}
 					selected={formState.contentWidthArr}
 					title={'ширина контента'}
-					onChange={(option) => setFormState({
-						...formState,
-						contentWidthArr: option
-					})}
+					onChange={(option) =>
+						setFormState({
+							...formState,
+							contentWidthArr: option,
+						})
+					}
 				/>
 			</ArticleParamsForm>
-			<Article handler={handleCloseByOver} />
+			<Article />
 		</div>
 	);
 };

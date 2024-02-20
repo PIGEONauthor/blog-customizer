@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import styles from './ArticleParamsForm.module.scss';
-import { useState, useRef, ReactNode, FormEvent, useEffect } from 'react';
+import { useState, useRef, ReactNode, FormEvent } from 'react';
 
 import { Button } from 'components/button';
 import { Text } from 'components/text';
 import { ArrowButton } from 'components/arrow-button';
+import { useCloseByOutClick } from 'src/hooks/useCloseByOutClick';
 
 type TForm = {
-	open?: boolean;
 	header?: string;
 	children: ReactNode | null;
 	onSubmit?: (evt: FormEvent<HTMLFormElement>) => void;
@@ -15,53 +15,32 @@ type TForm = {
 };
 
 export const ArticleParamsForm = ({
-	open,
 	header,
 	children,
 	onSubmit,
 	onReset,
 }: TForm) => {
-	const [formIsOpen, setFormIsOpen] = useState(open || false);
+	const [isOpen, setIsOpen] = useState(false);
 	const rootRef = useRef<HTMLDivElement>(null);
 
 	const toggleOpenForm = () => {
-		setFormIsOpen(!formIsOpen);
-	};
-	// -----------------------------------------------------------------------
-	/*
-	 ** данный блок реализует закрытие по клику вне формы:
-	 ** может быть криво, зато работает)
-	 */
-	const handleCloseByOver = () => {
-		window.removeEventListener('click', handleCloseByOver);
-		setFormIsOpen(false);
+		setIsOpen(!isOpen);
 	};
 
-	const handleMouseOut = () => {
-		formIsOpen && window.addEventListener('click', handleCloseByOver);
-	};
+	useCloseByOutClick({
+		isOpen,
+		onClose: () => setIsOpen(false),
+		rootRef: rootRef,
+	});
 
-	const handleMouseEnter = () => {
-		window.removeEventListener('click', handleCloseByOver);
-	};
-	/* useEffect использован для того, чтобы повесить слушатель, если
-		при открытии формы на ней не оказалось курсора (кто-то очень шустрый) */
-	useEffect(() => {
-		setTimeout(() => {
-			handleMouseOut();
-		}, 0);
-	}, [formIsOpen]);
-	// -----------------------------------------------------------------------
 	return (
 		<>
-			<ArrowButton open={formIsOpen} handleOpen={toggleOpenForm} />
+			<ArrowButton open={isOpen} handleOpen={toggleOpenForm} />
 			<aside
 				className={clsx(styles.container, {
-					[styles.container_open]: formIsOpen,
+					[styles.container_open]: isOpen,
 				})}
-				ref={rootRef}
-				onMouseLeave={handleMouseOut}
-				onMouseEnter={handleMouseEnter}>
+				ref={rootRef}>
 				<form className={styles.form} onSubmit={onSubmit}>
 					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
 						<p style={{ color: '#000', fontFamily: 'Open Sans' }}>{header}</p>

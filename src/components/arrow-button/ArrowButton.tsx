@@ -1,4 +1,3 @@
-// import { useEffect, useRef } from 'react';
 import clsx from 'clsx';
 
 import arrow from 'src/images/arrow.svg';

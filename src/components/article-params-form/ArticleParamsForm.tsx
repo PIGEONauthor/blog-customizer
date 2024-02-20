@@ -1,51 +1,56 @@
-import { ArrowButton } from 'components/arrow-button';
-import { Button } from 'components/button';
-// import {
-// 	fontFamilyOptions,
-// 	fontColors,
-// 	backgroundColors,
-// 	contentWidthArr,
-// 	fontSizeOptions,
-// } from 'src/constants/articleProps';
-import { Text } from 'components/text';
-import { useEffect, useRef, useState, ReactNode } from 'react';
-// import { Select } from '../select';
+import clsx from 'clsx';
 import styles from './ArticleParamsForm.module.scss';
-// import { RadioGroup } from '../radio-group';
-// import { OnClick } from '../arrow-button/ArrowButton';
+import { useState, useRef, ReactNode, FormEvent } from 'react';
+
+import { Button } from 'components/button';
+import { Text } from 'components/text';
+import { ArrowButton } from 'components/arrow-button';
+import { useCloseByOutClick } from 'src/hooks/useCloseByOutClick';
 
 type TForm = {
-	children: ReactNode,
-	onSubmit: (evt: React.MouseEvent) => void,
-	onReset: () => void
-}
+	header?: string;
+	children: ReactNode | null;
+	onSubmit?: (evt: FormEvent<HTMLFormElement>) => void;
+	onReset?: () => void;
+};
 
-export const ArticleParamsForm = ({children, onSubmit, onReset}: TForm) => {
+export const ArticleParamsForm = ({
+	header,
+	children,
+	onSubmit,
+	onReset,
+}: TForm) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const formRef = useRef<HTMLElement | null>(null);
+	const rootRef = useRef<HTMLDivElement>(null);
 
-	const handleChangeState = () => {
+	const toggleOpenForm = () => {
 		setIsOpen(!isOpen);
 	};
 
-	useEffect(() => {
-		formRef.current && formRef.current.classList.toggle(styles.container_open);
-	}, [isOpen]);
+	useCloseByOutClick({
+		isOpen,
+		onClose: () => setIsOpen(false),
+		rootRef: rootRef,
+	});
 
 	return (
 		<>
-			<ArrowButton open={isOpen} handleOpen={handleChangeState} />
-			<aside className={styles.container} ref={formRef}>
-				<form className={styles.form}>
+			<ArrowButton open={isOpen} handleOpen={toggleOpenForm} />
+			<aside
+				className={clsx(styles.container, {
+					[styles.container_open]: isOpen,
+				})}
+				ref={rootRef}>
+				<form className={styles.form} onSubmit={onSubmit}>
 					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
-						<p style={{color: '#000'}}>задайте параметры</p>
+						<p style={{ color: '#000', fontFamily: 'Open Sans' }}>{header}</p>
 					</Text>
 
 					{children}
 
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' onClick={onReset}/>
-						<Button title='Применить' type='submit' onClick={onSubmit}/>
+						<Button title='Сбросить' type='reset' onClick={onReset} />
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>

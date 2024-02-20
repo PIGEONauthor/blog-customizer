@@ -173,7 +173,7 @@ export const defaultArticleState = {
 	fontSizeOptions: fontSizeOptions[0],
 	fontColors: fontColors[0],
 	backgroundColors: backgroundColors[0],
-	contentWidthArr: contentWidthArr[0]
+	contentWidthArr: contentWidthArr[0],
 };
 
 export type ArticleStateType = typeof defaultArticleState;
